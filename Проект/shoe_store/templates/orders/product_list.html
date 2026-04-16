@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Страница товаров{% endblock %}
+
+{% block content %}
+<h1 style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
+    Страница товаров 
+</h1>
+
+<div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;">
+    {% if user.is_authenticated %}
+        {% if user.is_staff or user.is_superuser %}
+        <div class="controls">
+            <!-- ПОИСК -->
+            <input type="text" id="search" placeholder="Поиск..." value="{{ search_query }}">
+            <!-- ФИЛЬТРАЦИЯ ПО ПОСТАВЩИКАМ -->
+            <select id="supplier">
+                {% for sup in suppliers %}
+                    <option value="{% if sup == 'Все поставщики' %}all{% else %}{{ sup }}{% endif %}"
+                        {% if supplier_filter == sup %}selected{% endif %}>{{ sup }}
+                    </option>
+                {% endfor %}
+            </select>
+            <!-- СОРТИРОВКА ПО ОСТАТКУ НА СКЛАДЕ -->
+            <select id="sort">
+                <option value="" {% if not sort_order %}selected{% endif %}>Без сортировки</option>
+                <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Сортировка по наличию на складе ↑</option>
+                <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Сортировка по наличию на складе ↓</option>
+            </select>
+
+            {% if user.is_superuser %}
+                <a href="{% url 'orders:add_product' %}"><button>Добавить товар</button></a>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<div id="products-container" style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
+    {% include "orders/product_list_partial.html" %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    let debounceTimer;  // Для debounce поиска
+    
+    function updateProducts() {
+        const search = $('#search').val();
+        const supplier = $('#supplier').val();
+        const sort = $('#sort').val();
+        
+        $.ajax({
+            url: window.location.pathname,
+            type: 'GET',
+            data: {
+                search: search,
+                supplier: supplier,
+                sort: sort
+            },
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'  // Для AJAX
+            },
+            success: function(data) {
+                $('#products-container').html(data);  // Обновляем контейнер
+            },
+            error: function(xhr, status, error) {
+                alert('Ошибка загрузки данных.');
+            }
+        });
+    }
+
+    if ($('#search').length) {
+        $('#search').on('input', function() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(updateProducts, 300);  // Debounce 300ms
+        });
+    }
+    if ($('#supplier').length && $('#sort').length) {
+        $('#supplier, #sort').on('change', function() {
+            updateProducts();
+        });
+    }
+});
+</script>
+{% endblock %}

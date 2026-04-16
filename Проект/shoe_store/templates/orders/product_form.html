@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Страница товара{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <h1 style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
+        Форма добавления/редактирования товара
+    </h1>
+    <style>
+        h1 { color: #00FA9A; }
+        form { max-width: 600px; margin: auto; }
+        input, select, textarea { width: 100%; padding: 5px; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <div class="messages">
+        {% for message in messages %}
+            <p class="{% if message.tags == 'error' %}error{% else %}success{% endif %}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Сохранить</button>
+    </form>
+    <br><a href="{% url 'orders:product_list' %}">Назад</a>
+</body>
+</html>
+{% endblock %}

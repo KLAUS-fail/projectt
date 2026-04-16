@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'Icon.ico' %}">
+    <!-- Глобальные стили -->
+    <style>
+      body { font-family: 'Times New Roman', serif; background: #FFFFFF; margin: 20px; }
+      h1 { color: #00FA9A; }
+      button, input[type="submit"], 
+      a[style*="background-color"] { background-color: #00FA9A; color: black; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer; text-decoration: none; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { border: 1px solid #000; padding: 8px; }
+      th { background: #7FFF00; }
+      .product-row { background: #7FFF00; }
+      .high-discount { background: #00FA9A; }
+      .out-of-stock { background: lightblue; }
+      .price-discount s { color: red; }
+      .price-discount .final-price { color: black; }
+      .product-image { max-width: 100px; }
+      .controls { margin-bottom: 20px; }
+    </style>
+  </head>
+  <body>
+    {% include "includes/header.html" %}
+      <main>
+        {% block content %}{% endblock %}
+      </main>
+    {% include "includes/footer.html" %}
+  </body>
+</html>

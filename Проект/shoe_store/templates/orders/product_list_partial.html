@@ -1,0 +1,47 @@
+{% load static %}
+
+{% for product in products %}
+    <div class="product-card" style="width: 100%; max-width: 1000px; border: 1px solid #000; border-radius: 8px; padding: 10px; background: {% if product.discount > 15 %}#00FA9A{% elif product.stock == 0 %}lightblue{% else %}#7FFF00{% endif %}; margin: 0 auto;">
+        <div style="display: flex;">
+
+            <!-- 1 колонка: картинка -->
+            <div style="flex: 1; padding-right: 10px;">
+                <img src="{% if product.image %}
+                    {{ product.image.url }}
+                {% else %}
+                    {% static 'picture.png' %}
+                {% endif %}" 
+                style="width: 100%; max-width: 170px; height: auto;">
+            </div>
+
+            <!-- 2 колонка: данные о товаре -->
+            <div style="flex: 2; padding-right: 10px; font-size: 14px;">
+                <p style="font-weight: bold; margin: 0; font-size: 16px;">{{ product.get_category_display }} | {{ product.name }}</p>
+                <p style="margin: 5px 0;">Описание товара: {{ product.description|truncatechars:100 }}</p>
+                <p style="margin: 5px 0;">Производитель: {{ product.manufacturer }}</p>
+                <p style="margin: 5px 0;">Поставщик: {{ product.supplier }}</p>
+                <p style="margin: 5px 0;">Цена: 
+                    {% if product.discount %}
+                        <span class="price-discount"><s>{{ product.price }} руб.</s> 
+                        <span class="final-price">{{ product.get_final_price|default:product.price }} руб.</span></span>
+                    {% else %}{{ product.price }} руб.{% endif %}
+                </p>
+                <p style="margin: 5px 0;">Единица измерения: {{ product.unit }}</p>
+                <p style="margin: 5px 0;">Количество на складе: {{ product.stock }}</p>
+            </div>
+            
+            <!-- 3 колонка: скидка -->
+            <div style="flex: 0 0 100px; text-align: center; font-size: 14px;">
+                <p style="margin: 0; font-weight: bold;">Скидка</p>
+                <p style="margin: 5px 0;">{{ product.discount }}%</p>
+                {% if user.is_superuser %}
+                    <a href="{% url 'orders:edit_product' product.id %}"><td>Редактировать данные<td></a>
+                    <p style="margin: 3;"></p>
+                    <a href="{% url 'orders:delete_product' product.id %}"><td>Удалить товар<td></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <p style="text-align: center;">Товары не найдены. Попробуйте применить другие параметры.</p>
+{% endfor %}

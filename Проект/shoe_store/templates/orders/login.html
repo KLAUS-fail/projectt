@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Вход в систему{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+  <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px;">
+    <h1>Вход</h1>
+
+    <form method="post">
+      {% csrf_token %}
+      <label for="username">Логин (email):</label>
+      <input type="email" name="username" id="username" style="padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; width: 100%; font-size: 16px;" required>
+      
+      <label for="password">Пароль:</label>
+      <input type="password" name="password" id="password" style="padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; width: 100%; font-size: 16px;" required>
+      
+      <button type="submit">Войти в учётную запись</button>
+    </form>
+
+    {% if form.errors %}
+      <p style="color: red; text-align: center; margin-top: 15px;">Неверный логин или пароль.</p>
+    {% endif %}
+
+    <div style=" margin-top: 20px;">
+      <a href="{% url 'orders:product_list' %}">Войти без авторизации</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

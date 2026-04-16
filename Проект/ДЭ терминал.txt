@@ -1,0 +1,27 @@
+where python
+
+deactivate
+rm -r venv
+
+
+python -m venv venv        
+source venv/Scripts/activate        
+python -m pip install --upgrade pip  
+
+pip install Django==5.2 
+
+
+pip freeze > requirements.txt                       
+pip install -r requirements.txt  
+
+
+django-admin startproject <имя проекта>
+python manage.py startapp <имя приложения>  
+
+
+python manage.py runserver
+
+python manage.py migrate                                                
+python manage.py makemigrations  
+
+python manage.py createsuperuser

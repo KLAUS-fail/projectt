@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Удаление товара{% endblock %}
+
+{% block content %}
+<h1 style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
+    Удаление товара
+</h1>
+    <style>
+        body { font-family: 'Times New Roman', serif; background: #FFFFFF; margin: 20px; text-align: center; }
+        .warning { color: orange; }
+    </style>
+<body>
+    <p class="warning">Вы уверены, что хотите удалить "{{ product.description }}"? Это действие необратимо.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Да, удалить</button>
+    </form>
+    <br><a href="{% url 'orders:product_list' %}">Назад</a>
+</body>
+{% endblock %}
